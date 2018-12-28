@@ -19,7 +19,7 @@ export default class SingleSelect extends React.Component{
     }
 
     onChangeValue(option){
-        let value = option ? option.value : null;
+        let value = option ? option.value : undefined;
         this.setState({value})
         this.props.onChange(value);
     }

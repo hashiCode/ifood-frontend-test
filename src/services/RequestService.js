@@ -13,8 +13,13 @@ class RequestService {
     }
 
     buildQueryParameters(searchJSON){
-        console.log(queryString.stringify(searchJSON));
         return queryString.stringify(searchJSON);
+    }
+
+    getFilters(){
+        //use https to fetch from heroku
+        return axios.get(`https://www.mocky.io/v2/5a25fade2e0000213aa90776`)
+            .then(response => response.data)
     }
 }
 

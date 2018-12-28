@@ -1,5 +1,6 @@
 export default {
     "pt-BR" : {
+        "login.button" : "Login",
         "filter_panel.title" : "Busca de Playlists",
         "filter_panel.filter.locale" : "Língua",
         "filter_panel.filter.country" : "País",
@@ -12,6 +13,7 @@ export default {
         "playlist_result.empty" : "Nenhuma playlist foi encontrada."
     },
     "en-US" : {
+        "login.button" : "Login",
         "filter_panel.title" : "Playlist Search",
         "filter_panel.filter.locale" : "Locale",
         "filter_panel.filter.country" : "Country",

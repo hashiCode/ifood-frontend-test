@@ -1,8 +1,6 @@
 import React from 'react';
 import FilterPanel from './FilterPanel';
 import PlaylistsResult from './PlaylistsResult';
-import locale from './filterOptions/locale';
-import country from './filterOptions/country';
 import {
     Container,
     Row,
@@ -13,9 +11,6 @@ import {
     injectIntl,
 } from 'react-intl';
 import NavBar from './NavigationBar'
-import SingleSelect from './SingleSelect';
-import DateTime from 'react-datetime';
-import NumberInput from './NumberInput'
 import 'react-datetime/css/react-datetime.css'
 import 'moment';
 import requestService from '../services/RequestService';
@@ -23,6 +18,8 @@ import _ from 'lodash'
 import localStorageService from '../services/LocalStorageService'
 import Spinner from './Spinner';
 import ErrorModal from './ErrorModal'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 class FeaturedPlaylist extends React.Component{
 
@@ -82,9 +79,15 @@ class FeaturedPlaylist extends React.Component{
                 }
             }).catch(error => {
                 //TODO check for other erros/ refresh token
-                const errorModal = this.createErrorModal("error_modal.errorRequest")
-                this.setState({loading : false, validToken : false, errorModal});
-                clearInterval(this.refreshPlaylists)
+                if(error.response.status == 400){
+                    toast.error(error.response.data.error.message);
+                    this.setState({loading : false})
+                }
+                else{
+                    const errorModal = this.createErrorModal("error_modal.errorRequest")
+                    this.setState({loading : false, validToken : false, errorModal});
+                    clearInterval(this.refreshPlaylists)
+                }
             });
         }
         else{
@@ -108,37 +111,13 @@ class FeaturedPlaylist extends React.Component{
     }
 
     render(){
-        const {messages} = this.props.intl;
         return (
         <div>
             <NavBar />
             <Container fluid>
                 <Row>
                     <Col>
-                        <FilterPanel>
-                            <Container>
-                                <Row>
-                                    <Col>
-                                        <SingleSelect placeholder={messages["filter_panel.filter.locale"]} options={locale}
-                                            onChange={value => this.updateSearchJSON('locale', value)}/>
-                                    </Col>
-                                    <Col>
-                                        <SingleSelect placeholder={messages["filter_panel.filter.country"]} options={country}
-                                            onChange={value => this.updateSearchJSON('country', value)}/>
-                                    </Col>
-                                    <Col>
-                                        <DateTime placeholder={messages["filter_panel.filter.data"]} inputProps={{placeholder :messages["filter_panel.filter.date"] }}
-                                            onChange={moment => this.updateSearchJSON("timestamp", moment.format("YYYY-MM-DDTHH:mm:ss"))}/>
-                                    </Col>
-                                    <Col>
-                                        <NumberInput placeholder={messages["filter_panel.filter.size"]} min={1} max={50} onChange={value => this.updateSearchJSON("limit", value)}/>
-                                    </Col>
-                                    <Col>
-                                        <NumberInput placeholder={messages["filter_panel.filter.page"]} min={0} onChange={value => this.updateSearchJSON("offset", value)}/>
-                                    </Col>
-                                </Row>
-                            </Container>
-                        </FilterPanel>
+                        <FilterPanel updateSearchJSON={this.updateSearchJSON} />
                     </Col>
                 </Row>
 
@@ -152,6 +131,8 @@ class FeaturedPlaylist extends React.Component{
             {this.state.loading && <Spinner />}
             
             {this.state.errorModal}
+
+            <ToastContainer />
         </div>
         )
     }

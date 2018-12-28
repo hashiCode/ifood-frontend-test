@@ -31,7 +31,7 @@ export default class NumberInput extends React.Component{
     render(){
         return (
             <Input type="number" placeholder={this.props.placeholder}
-                    min={this.props.min} max={this.props.max} onChange={this.onChange} value={this.state.value} />
+                    onChange={this.onChange} value={this.state.value} />
         )
     }
 
